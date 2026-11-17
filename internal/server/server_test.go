@@ -150,7 +150,7 @@ func TestMCPServesProgrammingTools(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer server.Close(context.Background())
-	if server.ToolCount() != 22 {
+	if server.ToolCount() != 26 {
 		t.Fatalf("unexpected tool count: %d", server.ToolCount())
 	}
 
@@ -161,7 +161,7 @@ func TestMCPServesProgrammingTools(t *testing.T) {
 	}
 	assertStatus(t, response, http.StatusOK)
 	body := readBody(t, response)
-	for _, tool := range []string{"webegg_file_read", "webegg_file_patch", "webegg_grep", "webegg_git_diff", "webegg_shell_run", "webegg_project_script", "webegg_directory_create", "webegg_file_move", "webegg_git_show"} {
+	for _, tool := range []string{"webegg_file_read", "webegg_file_patch", "webegg_grep", "webegg_git_diff", "webegg_shell_run", "webegg_project_script", "webegg_directory_create", "webegg_file_move", "webegg_git_show", "webegg_shell_start", "webegg_process_logs"} {
 		if !strings.Contains(body, tool) {
 			t.Fatalf("tools/list does not contain %s: %s", tool, body)
 		}

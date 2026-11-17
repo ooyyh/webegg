@@ -1,7 +1,7 @@
 export const DEFAULT_ENDPOINT = "http://127.0.0.1:8787/mcp";
 export const PROTOCOL_VERSION = "2026-07-28";
 
-const CLIENT_INFO = { name: "webegg-extension", version: "0.9.6" };
+const CLIENT_INFO = { name: "webegg-extension", version: "0.9.7" };
 const META = {
   "io.modelcontextprotocol/protocolVersion": PROTOCOL_VERSION,
   "io.modelcontextprotocol/clientInfo": CLIENT_INFO,

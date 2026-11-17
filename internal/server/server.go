@@ -23,7 +23,7 @@ import (
 
 const (
 	ProtocolVersion = "2026-07-28"
-	Version         = "0.9.6"
+	Version         = "0.9.7"
 )
 
 type Server struct {
@@ -132,6 +132,9 @@ func (s *Server) Close(ctx context.Context) error {
 
 	if server == nil {
 		return nil
+	}
+	if s.toolService != nil {
+		s.toolService.ShutdownProcesses()
 	}
 	return server.Shutdown(ctx)
 }

@@ -8,10 +8,12 @@ test("nextBridgeCommand retrieves queued provider work", async () => {
     endpoint: DEFAULT_ENDPOINT,
     token: "we_test",
     provider: "gemini",
+    activeCommandId: "cmd_active",
     fetchImpl: async (url) => {
       const parsed = new URL(url);
       assert.equal(parsed.pathname, "/api/bridge/commands");
       assert.equal(parsed.searchParams.get("provider"), "gemini");
+      assert.equal(parsed.searchParams.get("activeCommandId"), "cmd_active");
       return new Response(JSON.stringify({ command: { id: "cmd_1", prompt: "读取项目", initialize: true } }), {
         status: 200, headers: { "Content-Type": "application/json" },
       });

@@ -1,0 +1,59 @@
+name: Bug report
+description: 报告可复现的问题
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提交前请确认已使用最新 Release，并重新加载了扩展。
+        请勿上传令牌、API Key、完整私有源码或敏感日志。
+  - type: input
+    id: version
+    attributes:
+      label: WebEgg 版本
+      placeholder: "0.9.7"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: 问题区域
+      options:
+        - 桌面聊天
+        - MCP 工具
+        - 浏览器扩展
+        - 构建/发布
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 启动 WebEgg
+        2. 新建会话
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望结果
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际结果
+      description: 请粘贴脱敏后的错误信息。
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境
+      placeholder: Windows 版本、Chrome/Edge 版本、Gemini 页面
+    validations:
+      required: true

@@ -50,6 +50,9 @@ function toolSummary(tool: string, args: Record<string, any>): string {
     if (tool === 'webegg_directory_list') return args.path || '项目根目录';
     if (tool === 'webegg_glob' || tool === 'webegg_grep') return args.pattern || '';
     if (tool === 'webegg_shell_run') return args.command || '';
+    if (tool === 'webegg_shell_start') return args.command || '';
+    if (tool === 'webegg_process_list') return '后台进程状态';
+    if (tool === 'webegg_process_logs' || tool === 'webegg_process_stop') return args.processId || '';
     if (tool === 'webegg_project_script') return args.script || '';
     if (tool === 'webegg_git_status') return '工作区状态';
     if (tool === 'webegg_git_diff') return args.path || (args.staged ? '暂存区差异' : '工作区差异');

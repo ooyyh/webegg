@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sync"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"webegg-next/internal/approval"
@@ -14,13 +15,16 @@ import (
 type Service struct {
 	store     *config.Store
 	approvals *approval.Manager
+
+	processMu sync.Mutex
+	processes map[string]*backgroundProcess
 }
 
 func NewService(store *config.Store, approvals *approval.Manager) *Service {
-	return &Service{store: store, approvals: approvals}
+	return &Service{store: store, approvals: approvals, processes: make(map[string]*backgroundProcess)}
 }
 
-func (s *Service) ToolCount() int { return 22 }
+func (s *Service) ToolCount() int { return 26 }
 
 type EmptyInput struct{}
 type ProjectInput struct {
@@ -116,6 +120,15 @@ type ScriptInput struct {
 	TimeoutSeconds int      `json:"timeoutSeconds,omitempty" jsonschema:"Timeout from 1 to 600 seconds; default 300"`
 	ApprovalID     string   `json:"approvalId,omitempty" jsonschema:"One-time local approval ID; normally supplied by WebEgg"`
 }
+type ProcessStartInput struct {
+	ProjectID  string `json:"projectId" jsonschema:"Authorized project ID"`
+	Command    string `json:"command" jsonschema:"Long-running shell command such as a dev server"`
+	ApprovalID string `json:"approvalId,omitempty" jsonschema:"One-time local approval ID; normally supplied by WebEgg"`
+}
+type ProcessIDInput struct {
+	ProcessID  string `json:"processId" jsonschema:"Process ID returned by webegg_shell_start or webegg_process_list"`
+	ApprovalID string `json:"approvalId,omitempty" jsonschema:"One-time local approval ID; normally supplied by WebEgg"`
+}
 
 func (s *Service) Register(server *mcp.Server) {
 	mcp.AddTool(server, &mcp.Tool{Name: "webegg_project_list", Description: "List authorized local projects. Always call this first when the project ID is unknown.", Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true}}, s.listProjectsHandler)
@@ -140,6 +153,10 @@ func (s *Service) Register(server *mcp.Server) {
 	mcp.AddTool(server, &mcp.Tool{Name: "webegg_git_show", Description: "Show bounded metadata and changed-file statistics for one commit without author email addresses.", Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true}}, s.gitShowHandler)
 	mcp.AddTool(server, &mcp.Tool{Name: "webegg_shell_run", Description: "Run a shell command in the project directory with timeout and output limits. This is NOT an operating-system sandbox."}, s.shellRunHandler)
 	mcp.AddTool(server, &mcp.Tool{Name: "webegg_project_script", Description: "Run an existing package.json script with npm or pnpm for builds and tests. Never installs dependencies."}, s.projectScriptHandler)
+	mcp.AddTool(server, &mcp.Tool{Name: "webegg_shell_start", Description: "Start a long-running background command such as a development server. Returns a process ID immediately; use logs/status instead of assuming it started."}, s.processStartHandler)
+	mcp.AddTool(server, &mcp.Tool{Name: "webegg_process_list", Description: "List background processes started by WebEgg with running state and exit code.", Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true}}, s.processListHandler)
+	mcp.AddTool(server, &mcp.Tool{Name: "webegg_process_logs", Description: "Read the bounded recent stdout/stderr log of a background process.", Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true}}, s.processLogsHandler)
+	mcp.AddTool(server, &mcp.Tool{Name: "webegg_process_stop", Description: "Stop a background process and its child process tree."}, s.processStopHandler)
 }
 
 func (s *Service) listProjectsHandler(_ context.Context, _ *mcp.CallToolRequest, _ EmptyInput) (*mcp.CallToolResult, any, error) {
@@ -237,6 +254,24 @@ func (s *Service) projectScriptHandler(ctx context.Context, _ *mcp.CallToolReque
 		return result, nil, nil
 	}
 	return completed(s.projectScript(ctx, input))
+}
+func (s *Service) processStartHandler(_ context.Context, _ *mcp.CallToolRequest, input ProcessStartInput) (*mcp.CallToolResult, any, error) {
+	if proceed, result := s.authorize("webegg_shell_start", "后台启动："+input.Command, input, input.ApprovalID); !proceed {
+		return result, nil, nil
+	}
+	return completed(s.processStart(input))
+}
+func (s *Service) processListHandler(_ context.Context, _ *mcp.CallToolRequest, _ EmptyInput) (*mcp.CallToolResult, any, error) {
+	return completed(s.processList())
+}
+func (s *Service) processLogsHandler(_ context.Context, _ *mcp.CallToolRequest, input ProcessIDInput) (*mcp.CallToolResult, any, error) {
+	return completed(s.processLogs(input))
+}
+func (s *Service) processStopHandler(_ context.Context, _ *mcp.CallToolRequest, input ProcessIDInput) (*mcp.CallToolResult, any, error) {
+	if proceed, result := s.authorize("webegg_process_stop", "停止后台进程 "+input.ProcessID, input, input.ApprovalID); !proceed {
+		return result, nil, nil
+	}
+	return completed(s.processStop(input))
 }
 
 type ProjectInputWithPath struct {

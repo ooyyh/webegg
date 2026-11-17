@@ -1,6 +1,10 @@
 # WebEgg
 
-WebEgg 使用 **Wails + Go + React + Manifest V3**，为 Gemini 网页提供真实的本地编程 MCP 工具。当前版本：`0.9.6`。
+[![CI](https://github.com/ooyyh/webegg/actions/workflows/ci.yml/badge.svg)](https://github.com/ooyyh/webegg/actions/workflows/ci.yml)
+[![Release](https://github.com/ooyyh/webegg/actions/workflows/release.yml/badge.svg)](https://github.com/ooyyh/webegg/actions/workflows/release.yml)
+[![Latest Release](https://img.shields.io/github/v/release/ooyyh/webegg)](https://github.com/ooyyh/webegg/releases)
+
+WebEgg 使用 **Wails + Go + React + Manifest V3**，为 Gemini 网页提供真实的本地编程 MCP 工具。当前版本：`0.9.7`。
 
 它不是把 Claude 或 OpenCode 的内部运行时直接导出，而是在 WebEgg 中实现等价的本地编程能力，并打通：
 
@@ -10,7 +14,42 @@ WebEgg 使用 **Wails + Go + React + Manifest V3**，为 Gemini 网页提供真�
 本地消息/工具卡片 ← 会话事件与结果 ← 插件自动回发结果给 Gemini
 ```
 
-## 已注册的 22 项工具
+![WebEgg 本地对话工作区](docs/images/chat.png)
+
+## 核心特性
+
+- **全窗口本地聊天工作区**：按项目隔离会话，支持多会话、软删除归档和复活。
+- **浏览器自动控制**：新建会话后自动建立 Gemini 网页会话并注入工具协议。
+- **26 项本地编程工具**：文件、目录、搜索、Git、Shell、后台进程与项目脚本。
+- **两种执行策略**：全自动，或写入/执行前由本地桌面批准。
+- **真实数据可视化**：最近 7 天消息/工具调用趋势与工具能力分布。
+- **本地结构化渲染**：Markdown、代码、文件内容、命令输出、Git diff 和可折叠工具卡片。
+- **可恢复任务状态**：应用重启时不会留下永久“运行中/排队中”消息。
+- **极简黑白主题**：桌面、插件弹窗共享日间/夜间主题。
+
+## 下载与安装
+
+从 [Releases](https://github.com/ooyyh/webegg/releases) 下载最新 Windows 包：
+
+- `WebEgg-windows-amd64.zip`：便携版桌面程序、插件、README 和文档。
+- `WebEgg.exe`：仅桌面程序。
+
+仓库源码不包含已编译的 `build/bin` 二进制，请使用 Releases 或本地构建。
+
+当前不提供 Chrome Web Store 上架版本，插件需通过开发者模式加载 `extension` 目录。
+
+## 自动构建与发布
+
+- `.github/workflows/ci.yml`：push / PR 自动执行 Go 测试、插件测试、前端构建和 Windows Wails 构建。
+- `.github/workflows/release.yml`：推送 `v*` tag 或手动触发后构建并发布 Release。
+- Release 自动生成桌面便携包、插件包和 `SHA256SUMS.txt`。
+
+```powershell
+git tag v0.9.7
+git push origin v0.9.7
+```
+
+## 已注册的 26 项工具
 
 | 分类 | 工具 | 能力 |
 |---|---|---|
@@ -22,7 +61,8 @@ WebEgg 使用 **Wails + Go + React + Manifest V3**，为 Gemini 网页提供真�
 | 搜索 | `webegg_glob` / `webegg_grep` | 文件模式与正则内容搜索 |
 | Git | `webegg_git_status` / `webegg_git_diff` / `webegg_git_log` | 工作区、差异和提交历史 |
 | Git | `webegg_git_branches` / `webegg_git_show` | 本地分支和单次提交统计 |
-| 执行 | `webegg_shell_run` / `webegg_project_script` | 受控 Shell 与 package.json 脚本 |
+| 执行 | `webegg_shell_run` / `webegg_project_script` | 受控短时 Shell 与 package.json 脚本 |
+| 执行 | `webegg_shell_start` / `webegg_process_list` / `webegg_process_logs` / `webegg_process_stop` | 后台开发服务器、状态、日志与进程树停止 |
 
 不接第三方网页搜索、网页读取、图片生成或其他外部 API。
 
@@ -82,11 +122,11 @@ Gemini 每次只应输出一个 ` ```webegg ` 工具块。`0.4.0` 使用工具�
 
 插件自动执行并回发结果；如果 Gemini 输入框存在手动草稿，会停止并在本地会话中报告错误，避免覆盖。每次任务的连续工具调用默认不限次数；桌面端可按需设置 20 / 50 / 100 / 200 次熔断并同步到插件。
 
-每个项目拥有独立会话列表与本地历史。`0.9.6` 不再使用会话侧栏：项目和会话通过顶部下拉框切换，对话页面占满整个窗口，工作区导航收进聊天头部菜单。新建会话会自动控制浏览器新建 Gemini 对话并注入工具协议，无需手动发送初始化消息。会话删除采用可恢复归档，并提供永久清空入口。
+每个项目拥有独立会话列表与本地历史。`0.9.7` 不再使用会话侧栏：项目和会话通过顶部下拉框切换，对话页面占满整个窗口，工作区导航收进聊天头部菜单。新建会话会自动控制浏览器新建 Gemini 对话并注入工具协议，无需手动发送初始化消息。会话删除采用可恢复归档，并提供永久清空入口。
 
 会话切换会携带必要历史，避免多个标签并发污染上下文。应用重启时，排队或执行中的消息会被明确标记为中断，不会永久卡住。
 
-桌面端提供对话、概览、项目、工具与审批、连接五个工作区。对话模式使用全窗口无侧栏布局；其他工作区使用窄图标导航并支持完整纵向滚动。`0.9.6` 延续极简黑白灰与日月主题，并在概览中加入基于真实本地历史的最近 7 天消息/工具调用柱状图和工具能力分类分布。
+桌面端提供对话、概览、项目、工具与审批、连接五个工作区。对话模式使用全窗口无侧栏布局；其他工作区使用窄图标导航并支持完整纵向滚动。`0.9.7` 延续极简黑白灰与日月主题，并在概览中加入基于真实本地历史的最近 7 天消息/工具调用柱状图和工具能力分类分布。
 
 ## 安全与边界
 
@@ -128,19 +168,28 @@ wails build
 
 测试覆盖配置、令牌、审批单次消费、文件完整生命周期、搜索、Shell、真实 MCP 工具列表与调用、动态提示词、Gemini 工具块解析及审批重试。
 
+## 更多文档
+
+- [架构与数据流](docs/ARCHITECTURE.md)
+- [26 项工具参考](docs/TOOLS.md)
+- [开发、测试、构建与发布](docs/DEVELOPMENT.md)
+- [版本变更](CHANGELOG.md)
+
 ## 结构
 
 ```text
-webegg-next/
+webegg/
 ├── app.go, main.go          # Wails、桌面 API、执行模式和审批
 ├── internal/
 │   ├── approval/            # 参数绑定的一次性审批
 │   ├── auth/                # 随机令牌与哈希校验
-│   ├── bridge/              # 网页命令队列与会话上下文
+│   ├── bridge/              # 网页命令队列、租约与会话上下文
 │   ├── chat/                # 项目会话、消息、工具历史与归档恢复
-│   ├── config/              # 项目、配置和执行模式
-│   ├── server/              # loopback HTTP 与 MCP
-│   └── tools/               # 文件、搜索、Git、Shell、项目脚本
+│   ├── config/              # 项目、配置、执行模式和状态目录
+│   ├── server/              # loopback HTTP、MCP 与桥接端点
+│   └── tools/               # 文件、搜索、Git、Shell、后台进程
 ├── frontend/                # React 桌面控制中心
-└── extension/               # 无 UI 注入的 Gemini 后台传输适配器
+├── extension/               # 无 UI 注入的 Gemini 后台传输适配器
+├── docs/                    # 架构、工具和开发文档
+└── .github/workflows/       # CI 与自动 Release
 ```

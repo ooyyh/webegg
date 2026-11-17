@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"webegg-next/internal/approval"
@@ -115,6 +117,39 @@ func TestDirectoryAndFileTransferTools(t *testing.T) {
 	info, err := service.projectInfo(ProjectInput{ProjectID: projectID})
 	if err != nil || !strings.Contains(marshalText(t, info), projectID) {
 		t.Fatalf("project info failed: %#v, %v", info, err)
+	}
+}
+
+func TestBackgroundProcessLifecycle(t *testing.T) {
+	if _, err := exec.LookPath("node"); err != nil {
+		t.Skip("node is required for the background process fixture")
+	}
+	service, projectID, _ := newTestService(t, config.ModeAutomatic)
+	started, err := service.processStart(ProcessStartInput{ProjectID: projectID, Command: `node -e "setInterval(()=>{},1000)"`})
+	if err != nil {
+		t.Fatal(err)
+	}
+	info := started.(map[string]any)["process"].(backgroundProcessInfo)
+	if !info.Running || info.ID == "" {
+		t.Fatalf("unexpected process start result: %#v", info)
+	}
+	time.Sleep(300 * time.Millisecond)
+	list, err := service.processList()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(marshalText(t, list), info.ID) {
+		t.Fatalf("process list missing started process: %#v", list)
+	}
+	if _, err := service.processLogs(ProcessIDInput{ProcessID: info.ID}); err != nil {
+		t.Fatal(err)
+	}
+	stopped, err := service.processStop(ProcessIDInput{ProcessID: info.ID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if stopped.(map[string]any)["process"].(backgroundProcessInfo).Running {
+		t.Fatal("process should stop")
 	}
 }
 

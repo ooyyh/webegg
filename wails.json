@@ -6,6 +6,13 @@
   "frontend:build": "npm run build",
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "auto",
+  "info": {
+    "companyName": "ooyyh",
+    "productName": "WebEgg",
+    "productVersion": "0.9.7",
+    "copyright": "Copyright 2026 ooyyh",
+    "comments": "Local AI Control Plane for web AI clients"
+  },
   "author": {
     "name": "ooyyh",
     "email": "laowan345@gmail.com"

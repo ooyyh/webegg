@@ -1,0 +1,108 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release tag, for example v0.9.7"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and publish Windows release
+    runs-on: windows-latest
+    timeout-minutes: 35
+    env:
+      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Wails
+        shell: pwsh
+        run: |
+          go install github.com/wailsapp/wails/v2/cmd/wails@v2.13.0
+          "$(go env GOPATH)\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+
+      - name: Test Go
+        run: go test ./...
+
+      - name: Test extension
+        working-directory: extension
+        run: npm test
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Validate extension manifest
+        run: node -e "const m=require('./extension/manifest.json'); if(m.manifest_version!==3||!m.version) process.exit(1); console.log('Manifest',m.version)"
+
+      - name: Build desktop application
+        run: wails build -clean -nopackage -o WebEgg.exe
+
+      - name: Package release
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force release | Out-Null
+          New-Item -ItemType Directory -Force release/WebEgg | Out-Null
+          Copy-Item build/bin/WebEgg.exe release/WebEgg/WebEgg.exe
+          Copy-Item README.md release/WebEgg/README.md
+          Copy-Item CHANGELOG.md release/WebEgg/CHANGELOG.md
+          Copy-Item CONTRIBUTING.md release/WebEgg/CONTRIBUTING.md
+          Copy-Item SECURITY.md release/WebEgg/SECURITY.md
+          Copy-Item extension release/WebEgg/extension -Recurse
+          Copy-Item docs release/WebEgg/docs -Recurse
+          Compress-Archive -Path release/WebEgg/* -DestinationPath release/WebEgg-windows-amd64.zip -CompressionLevel Optimal
+          Copy-Item build/bin/WebEgg.exe release/WebEgg.exe
+          $extensionVersion = node -p "require('./extension/manifest.json').version"
+          Compress-Archive -Path extension -DestinationPath "release/WebEgg-extension-$extensionVersion.zip" -CompressionLevel Optimal
+          Get-FileHash release/WebEgg-windows-amd64.zip -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  WebEgg-windows-amd64.zip" } | Set-Content release/SHA256SUMS.txt
+          Get-FileHash release/WebEgg.exe -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  WebEgg.exe" } | Add-Content release/SHA256SUMS.txt
+          Get-FileHash "release/WebEgg-extension-$extensionVersion.zip" -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  WebEgg-extension-$extensionVersion.zip" } | Add-Content release/SHA256SUMS.txt
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WebEgg-windows-${{ env.RELEASE_TAG }}
+          path: release/*
+          if-no-files-found: error
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          target_commitish: ${{ github.sha }}
+          name: WebEgg ${{ env.RELEASE_TAG }}
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+          files: |
+            release/WebEgg-windows-amd64.zip
+            release/WebEgg.exe
+            release/WebEgg-extension-*.zip
+            release/SHA256SUMS.txt

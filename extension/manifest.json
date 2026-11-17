@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "WebEgg Monochrome",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "description": "在后台为 Gemini 提供 WebEgg 本地项目、文件、搜索、Git、构建和 Shell 工具。",
   "permissions": ["storage", "alarms", "tabs", "scripting"],
   "host_permissions": [

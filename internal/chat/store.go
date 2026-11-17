@@ -436,7 +436,7 @@ func toolCategory(tool string) string {
 		return "搜索"
 	case strings.Contains(tool, "git_"):
 		return "Git"
-	case strings.Contains(tool, "shell") || strings.Contains(tool, "script"):
+	case strings.Contains(tool, "shell") || strings.Contains(tool, "script") || strings.Contains(tool, "process_"):
 		return "执行"
 	default:
 		return "其他"

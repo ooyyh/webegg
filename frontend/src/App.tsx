@@ -56,7 +56,9 @@ const TOOL_GROUPS: {title: string; icon: IconName; tone: string; tools: {name: s
         {name: 'webegg_git_show', description: '单次提交统计'},
     ]},
     {title: '执行', icon: 'terminal', tone: 'lime', tools: [
-        {name: 'webegg_shell_run', description: '受控 Shell 命令'}, {name: 'webegg_project_script', description: 'npm / pnpm 构建测试'},
+        {name: 'webegg_shell_run', description: '受控短时 Shell 命令'}, {name: 'webegg_shell_start', description: '启动后台服务器'},
+        {name: 'webegg_process_list', description: '后台进程状态'}, {name: 'webegg_process_logs', description: '读取进程日志'},
+        {name: 'webegg_process_stop', description: '停止进程树'}, {name: 'webegg_project_script', description: 'npm / pnpm 构建测试'},
     ]},
 ];
 
@@ -228,7 +230,7 @@ function App() {
                 <span className={`mode-orb ${snapshot.automationMode}`}><Icon name={snapshot.automationMode === 'automatic' ? 'zap' : 'shield'} size={15}/></span>
                 <span><strong>{snapshot.automationMode === 'automatic' ? '全自动执行' : '本地批准模式'}</strong><small>点击调整执行策略</small></span><Icon name="chevron" size={14}/>
             </button>
-            <div className="sidebar-footer"><span>WebEgg v0.9.6</span><span>WINDOWS</span></div>
+            <div className="sidebar-footer"><span>WebEgg v0.9.7</span><span>WINDOWS</span></div>
         </aside>}
 
         <div className={`app-body ${activeTab === 'chats' ? 'chat-full' : ''}`}>
