@@ -48,16 +48,20 @@ jobs:
           go install github.com/wailsapp/wails/v2/cmd/wails@v2.13.0
           "$(go env GOPATH)\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
 
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Frontend production build
+        working-directory: frontend
+        run: npm run build
+
       - name: Test Go
         run: go test ./...
 
       - name: Test extension
         working-directory: extension
         run: npm test
-
-      - name: Install frontend dependencies
-        working-directory: frontend
-        run: npm ci
 
       - name: Validate extension manifest
         run: node -e "const m=require('./extension/manifest.json'); if(m.manifest_version!==3||!m.version) process.exit(1); console.log('Manifest',m.version)"
