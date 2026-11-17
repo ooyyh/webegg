@@ -1,0 +1,17 @@
+:root {
+    font-family: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #e8edf2;
+    background: #0b0f14;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; min-height: 100%; background: #0b0f14; }
+body { min-width: 320px; min-height: 100vh; margin: 0; }
+button, input { font: inherit; }
+::selection { background: rgb(200 245 106 / 25%); color: #f4ffe5; }
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: #0f151b; }
+::-webkit-scrollbar-thumb { border: 2px solid #0f151b; border-radius: 8px; background: #34414c; }
