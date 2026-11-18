@@ -1,7 +1,7 @@
 # WebEgg
 
 <p align="center"><img src="docs/images/icon.png" width="96" height="96" alt="WebEgg icon" /></p>
-
+<a href="https://linux.do"><img src="https://img.shields.io/badge/LINUX%20DO-%E7%A4%BE%E5%8C%BA-FFB003?style=flat-square" alt="LINUX DO 社区" /></a>
 [![CI](https://github.com/ooyyh/webegg/actions/workflows/ci.yml/badge.svg)](https://github.com/ooyyh/webegg/actions/workflows/ci.yml)
 [![Release](https://github.com/ooyyh/webegg/actions/workflows/release.yml/badge.svg)](https://github.com/ooyyh/webegg/actions/workflows/release.yml)
 [![Latest Release](https://img.shields.io/github/v/release/ooyyh/webegg)](https://github.com/ooyyh/webegg/releases)
