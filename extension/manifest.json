@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "WebEgg Monochrome",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "在后台为 Gemini 提供 WebEgg 本地项目、文件、搜索、Git、构建和 Shell 工具。",
   "permissions": ["storage", "alarms", "tabs", "scripting"],
   "host_permissions": [
@@ -16,7 +16,19 @@
   },
   "action": {
     "default_title": "WebEgg 黑白版连接设置",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "content_scripts": [
     {

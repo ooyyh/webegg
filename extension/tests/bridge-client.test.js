@@ -46,6 +46,11 @@ test("Gemini content script is transport-only and injects no WebEgg UI", () => {
   assert.deepEqual(manifest.content_scripts[0].js, ["gemini.js", "content.js"]);
   assert.equal(manifest.permissions.includes("alarms"), true);
   assert.equal(manifest.permissions.includes("scripting"), true);
+  assert.equal(manifest.icons["16"], "icons/icon16.png");
+  assert.equal(manifest.action.default_icon["128"], "icons/icon128.png");
+  for (const file of ["icon16.png", "icon32.png", "icon48.png", "icon128.png"]) {
+    assert.equal(readFileSync(new URL(`../icons/${file}`, import.meta.url)).length > 0, true);
+  }
   assert.doesNotMatch(content, /attachShadow|webegg-connector-host|WebEggTranscript|send-prompt/);
   assert.match(content, /webegg:bridge-next/);
   assert.match(content, /webegg:bridge-event/);

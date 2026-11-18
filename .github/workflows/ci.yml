@@ -63,4 +63,4 @@ jobs:
         run: node -e "const m=require('./extension/manifest.json'); if(m.manifest_version!==3||!m.version) process.exit(1); console.log('Manifest',m.version)"
 
       - name: Wails build
-        run: wails build -clean -nopackage -o WebEgg.exe
+        run: wails build -clean -o WebEgg.exe

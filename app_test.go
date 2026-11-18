@@ -38,7 +38,7 @@ func TestSnapshotReportsGeminiConnection(t *testing.T) {
 		"method":  "server/discover",
 		"params": map[string]any{"_meta": map[string]any{
 			"io.modelcontextprotocol/protocolVersion":    localserver.ProtocolVersion,
-			"io.modelcontextprotocol/clientInfo":         map[string]string{"name": "webegg-extension", "version": "0.9.7"},
+			"io.modelcontextprotocol/clientInfo":         map[string]string{"name": "webegg-extension", "version": "0.9.8"},
 			"io.modelcontextprotocol/clientCapabilities": map[string]any{},
 		}},
 	})

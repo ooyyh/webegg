@@ -65,7 +65,7 @@ test("checkConnection reads discovery server info", async () => {
       result: {
         supportedVersions: [PROTOCOL_VERSION],
         _meta: {
-          "io.modelcontextprotocol/serverInfo": { name: "webegg", title: "WebEgg", version: "0.9.7" },
+          "io.modelcontextprotocol/serverInfo": { name: "webegg", title: "WebEgg", version: "0.9.8" },
         },
       },
     }), { status: 200, headers: { "Content-Type": "application/json" } }),
@@ -73,7 +73,7 @@ test("checkConnection reads discovery server info", async () => {
   assert.deepEqual(result, {
     ok: true,
     name: "WebEgg",
-    version: "0.9.7",
+    version: "0.9.8",
     protocolVersions: [PROTOCOL_VERSION],
   });
 });

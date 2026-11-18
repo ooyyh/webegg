@@ -162,7 +162,7 @@ export function ChatWorkspace({projects, connected, providerReady, providerLastS
                 </div>
             </header>
 
-            {!providerReady && <div className="provider-help"><ChatIcon name="alert" size={14}/><span>浏览器适配器没有心跳。请打开并刷新 Gemini 页面，确认 <strong>WebEgg Monochrome 0.9.7</strong> 已在扩展管理页启用。</span></div>}
+            {!providerReady && <div className="provider-help"><ChatIcon name="alert" size={14}/><span>浏览器适配器没有心跳。请打开并刷新 Gemini 页面，确认 <strong>WebEgg Monochrome 0.9.8</strong> 已在扩展管理页启用。</span></div>}
 
             <div className="local-message-scroll">
                 <div className="local-message-list">

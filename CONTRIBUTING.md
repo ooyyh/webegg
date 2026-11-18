@@ -22,7 +22,7 @@ npm ci
 npm run build
 cd ..
 
-wails build -clean -nopackage
+wails build -clean
 ```
 
 ## Pull Request

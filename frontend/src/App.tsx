@@ -230,7 +230,7 @@ function App() {
                 <span className={`mode-orb ${snapshot.automationMode}`}><Icon name={snapshot.automationMode === 'automatic' ? 'zap' : 'shield'} size={15}/></span>
                 <span><strong>{snapshot.automationMode === 'automatic' ? '全自动执行' : '本地批准模式'}</strong><small>点击调整执行策略</small></span><Icon name="chevron" size={14}/>
             </button>
-            <div className="sidebar-footer"><span>WebEgg v0.9.7</span><span>WINDOWS</span></div>
+            <div className="sidebar-footer"><span>WebEgg v0.9.8</span><span>WINDOWS</span></div>
         </aside>}
 
         <div className={`app-body ${activeTab === 'chats' ? 'chat-full' : ''}`}>

@@ -1,5 +1,12 @@
 # 变更日志
 
+## 0.9.8
+
+- 新增 WebEgg 品牌图标：黑底白蛋 + `</>` 编程符号。
+- 增加 Windows 多尺寸 ICO、桌面应用图标、网页 favicon。
+- 浏览器扩展增加 16/32/48/128 图标和工具栏图标。
+- README 增加项目图标和完整教程、Star History。
+
 ## 0.9.7
 
 - 新增 4 项后台进程工具：`shell_start`、`process_list`、`process_logs`、`process_stop`。

@@ -1,5 +1,7 @@
 # WebEgg
 
+<p align="center"><img src="docs/images/icon.png" width="96" height="96" alt="WebEgg icon" /></p>
+
 [![CI](https://github.com/ooyyh/webegg/actions/workflows/ci.yml/badge.svg)](https://github.com/ooyyh/webegg/actions/workflows/ci.yml)
 [![Release](https://github.com/ooyyh/webegg/actions/workflows/release.yml/badge.svg)](https://github.com/ooyyh/webegg/actions/workflows/release.yml)
 [![Latest Release](https://img.shields.io/github/v/release/ooyyh/webegg)](https://github.com/ooyyh/webegg/releases)
@@ -8,7 +10,7 @@
 
 WebEgg 是一个 **Wails + Go + React + Manifest V3** 的本地 AI 控制面。它通过浏览器插件驱动 Gemini 网页端，在本地执行真实的文件、目录、搜索、Git、Shell 和后台进程工具，并把对话与工具结果全部渲染在桌面端。
 
-当前版本：`0.9.7`
+当前版本：`0.9.8`
 
 > 不注入 Gemini 页面 UI，不依赖第三方 API Key。浏览器只是网页 AI 传输适配器，聊天与项目数据留在本机。
 
@@ -226,7 +228,7 @@ cd ..
 Windows 构建：
 
 ```powershell
-wails build -clean -nopackage
+wails build -clean
 ```
 
 详细说明见 [开发、测试、构建与发布](docs/DEVELOPMENT.md)。
@@ -238,8 +240,8 @@ wails build -clean -nopackage
 - Release 自动包含桌面程序、插件包、文档和 `SHA256SUMS.txt`。
 
 ```powershell
-git tag v0.9.7
-git push origin v0.9.7
+git tag v0.9.8
+git push origin v0.9.8
 ```
 
 ## 文档

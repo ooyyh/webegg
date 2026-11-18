@@ -23,7 +23,7 @@ import (
 
 const (
 	ProtocolVersion = "2026-07-28"
-	Version         = "0.9.7"
+	Version         = "0.9.8"
 )
 
 type Server struct {
