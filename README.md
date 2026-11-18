@@ -1,13 +1,12 @@
 # WebEgg
-
 <p align="center"><img src="docs/images/icon.png" width="96" height="96" alt="WebEgg icon" /></p>
-<a href="https://linux.do"><img src="https://img.shields.io/badge/LINUX%20DO-%E7%A4%BE%E5%8C%BA-FFB003?style=flat-square" alt="LINUX DO 社区" /></a>
+
 [![CI](https://github.com/ooyyh/webegg/actions/workflows/ci.yml/badge.svg)](https://github.com/ooyyh/webegg/actions/workflows/ci.yml)
 [![Release](https://github.com/ooyyh/webegg/actions/workflows/release.yml/badge.svg)](https://github.com/ooyyh/webegg/actions/workflows/release.yml)
 [![Latest Release](https://img.shields.io/github/v/release/ooyyh/webegg)](https://github.com/ooyyh/webegg/releases)
 [![Stars](https://img.shields.io/github/stars/ooyyh/webegg?style=flat)](https://github.com/ooyyh/webegg/stargazers)
 [![Last Commit](https://img.shields.io/github/last-commit/ooyyh/webegg)](https://github.com/ooyyh/webegg/commits/main)
-
+<a href="https://linux.do"><img src="https://img.shields.io/badge/LINUX%20DO-%E7%A4%BE%E5%8C%BA-FFB003?style=flat-square" alt="LINUX DO 社区" /></a>
 WebEgg 是一个 **Wails + Go + React + Manifest V3** 的本地 AI 控制面。它通过浏览器插件驱动 Gemini 网页端，在本地执行真实的文件、目录、搜索、Git、Shell 和后台进程工具，并把对话与工具结果全部渲染在桌面端。
 
 当前版本：`0.9.8`
